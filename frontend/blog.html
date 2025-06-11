@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog Details</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .blog-detail-container {
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      padding: 28px 28px 18px 28px;
+      margin-top: 12px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .blog-detail-title {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #2d6cdf;
+      margin-bottom: 10px;
+    }
+    .blog-detail-date {
+      color: #888;
+      font-size: 1rem;
+      margin-bottom: 18px;
+    }
+    .blog-detail-content {
+      font-size: 1.1rem;
+      color: #222;
+      margin-top: 10px;
+      white-space: pre-line;
+    }
+    .back-link {
+      display: inline-block;
+      margin-left: 400px;
+      margin-top: 10px;
+      color: #2d6cdf;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1.18rem;
+      padding: 4px 12px 4px 0;
+      border-radius: 6px;
+      background: none;
+      transition: color 0.2s, background 0.2s;
+    }
+    .back-link:hover {
+      color: #fff;
+      background: #2d6cdf;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <a href="index.html" class="back-link">&larr; Back to Blog List</a>
+  <div class="blog-detail-container" id="blogDetail">
+    <div>Loading...</div>
+  </div>
+  <script>
+    function getQueryParam(name) {
+      const url = new URL(window.location.href);
+      return url.searchParams.get(name);
+    }
+    async function loadBlog() {
+      const title = getQueryParam('title');
+      if (!title) {
+        document.getElementById('blogDetail').innerHTML = '<div>Blog not found.</div>';
+        return;
+      }
+      try {
+        const res = await fetch('http://localhost:8080/blogs');
+        const blogs = await res.json();
+        const blog = blogs.find(b => b.title === title);
+        if (!blog) {
+          document.getElementById('blogDetail').innerHTML = '<div>Blog not found.</div>';
+          return;
+        }
+        document.getElementById('blogDetail').innerHTML = `
+          <div class="blog-detail-title">${blog.title}</div>
+          <div class="blog-detail-date">${blog.date}</div>
+          <div class="blog-detail-content">${blog.content}</div>
+        `;
+      } catch (err) {
+        document.getElementById('blogDetail').innerHTML = '<div>Error loading blog.</div>';
+      }
+    }
+    loadBlog();
+  </script>
+</body>
+</html>

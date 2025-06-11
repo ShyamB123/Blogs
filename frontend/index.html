@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog Manager</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4" style="box-shadow: 0 2px 16px rgba(45,108,223,0.07);">
+    <div class="container-fluid">
+      <a class="navbar-brand d-flex align-items-center" href="#" style="font-size: 2rem; font-weight: bold; color: #2d6cdf;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#2d6cdf" class="bi bi-journal-richtext me-2" viewBox="0 0 16 16">
+          <path d="M7.5 4.5v1h-2v-1h2zm0 2v1h-2v-1h2zm0 2v1h-2v-1h2zm3-4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-7a.5.5 0 0 1 .5-.5h2zm-2 1v6h2v-6h-2z"/>
+          <path d="M3 2.5A1.5 1.5 0 0 1 4.5 1h7A1.5 1.5 0 0 1 13 2.5v11A1.5 1.5 0 0 1 11.5 15h-7A1.5 1.5 0 0 1 3 13.5v-11zm1.5-.5A.5.5 0 0 0 4 2.5v11a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5v-11a.5.5 0 0 0-.5-.5h-7z"/>
+        </svg>
+        Shyam's Blogs
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarContent">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center">
+          <li class="nav-item">
+            <a class="nav-link fw-bold" href="login.html">
+              <button class="btn btn-outline-primary">Login / Sign up</button>
+            </a>
+          </li>
+          <li class="nav-item ms-2">
+            <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addModal">Add Blog</button>
+          </li>
+          <li class="nav-item ms-2">
+            <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#removeModal">Remove Blog</button>
+          </li>
+          <li class="nav-item ms-2">
+            <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editModal">Edit Blog</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <h2 class="main-title text-center mb-4">Blog Manager</h2>
+  <div class="container" style="max-width: 1100px;">
+    <div id="blogsList" class="blog-list-container"></div>
+    <div id="message" class="message"></div>
+    <!-- Add Blog Modal -->
+    <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content" style="border-radius: 14px; box-shadow: 0 2px 16px rgba(45,108,223,0.13); background: #fff;">
+          <div class="modal-header" style="border-bottom: 1px solid #e3e7ef; background: #f8f9fa; border-radius: 14px 14px 0 0;">
+            <h5 class="modal-title" id="addModalLabel" style="font-weight: bold; color: #2d6cdf;">Add Blog</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body" style="padding: 28px 24px 18px 24px;">
+            <form id="addForm" onsubmit="return handleAdd(event)">
+              <label style="font-weight: 500; margin-top: 10px;">Title:
+                <input class="form-control" name="title" required style="background: #f6f8fa; border-radius: 6px;">
+              </label>
+              <label style="font-weight: 500; margin-top: 10px; display: block;">Content:</label>
+              <textarea class="form-control" name="content" required style="background: #f6f8fa; border-radius: 6px; margin-bottom: 10px;"></textarea>
+              <label style="font-weight: 500; margin-top: 10px;">Date:
+                <input class="form-control" type="date" name="date" required style="background: #f6f8fa; border-radius: 6px;">
+              </label>
+              <button class="btn btn-success mt-3 w-100" type="submit" style="font-weight: 600; border-radius: 6px;">Add Blog</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Remove Blog Modal -->
+    <div class="modal fade" id="removeModal" tabindex="-1" aria-labelledby="removeModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content" style="border-radius: 14px; box-shadow: 0 2px 16px rgba(45,108,223,0.13); background: #fff;">
+          <div class="modal-header" style="border-bottom: 1px solid #e3e7ef; background: #f8f9fa; border-radius: 14px 14px 0 0;">
+            <h5 class="modal-title" id="removeModalLabel" style="font-weight: bold; color: #2d6cdf;">Remove Blog</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body" style="padding: 28px 24px 18px 24px;">
+            <form id="removeForm" onsubmit="return handleRemove(event)">
+              <label style="font-weight: 500; margin-top: 10px;">Title:
+                <input class="form-control" name="title" required style="background: #f6f8fa; border-radius: 6px;">
+              </label>
+              <button class="btn btn-danger mt-3 w-100" type="submit" style="font-weight: 600; border-radius: 6px;">Remove Blog</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Edit Blog Modal -->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content" style="border-radius: 14px; box-shadow: 0 2px 16px rgba(45,108,223,0.13); background: #fff;">
+          <div class="modal-header" style="border-bottom: 1px solid #e3e7ef; background: #f8f9fa; border-radius: 14px 14px 0 0;">
+            <h5 class="modal-title" id="editModalLabel" style="font-weight: bold; color: #2d6cdf;">Edit Blog</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body" style="padding: 28px 24px 18px 24px;">
+            <form id="editForm" onsubmit="return handleEdit(event)">
+              <label style="font-weight: 500; margin-top: 10px;">Title:
+                <input class="form-control" name="title" required style="background: #f6f8fa; border-radius: 6px;">
+              </label>
+              <label style="font-weight: 500; margin-top: 10px; display: block;">Content:</label>
+              <textarea class="form-control" name="content" required style="background: #f6f8fa; border-radius: 6px; margin-bottom: 10px;"></textarea>
+              <label style="font-weight: 500; margin-top: 10px;">Date:
+                <input class="form-control" type="date" name="date" required style="background: #f6f8fa; border-radius: 6px;">
+              </label>
+              <button class="btn btn-warning mt-3 w-100" type="submit" style="font-weight: 600; border-radius: 6px;">Edit Blog</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="script.jsx"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    function getBlogSnippet(content, maxWords = 15) {
+      const words = content.split(/\s+/);
+      return words.length > maxWords ? words.slice(0, maxWords).join(' ') + '...' : content;
+    }
+    async function loadBlogs() {
+      try {
+        const res = await fetch('http://localhost:8080/blogs');
+        const blogs = await res.json();
+        const listDiv = document.getElementById('blogsList');
+        if (!Array.isArray(blogs) || blogs.length === 0) {
+          listDiv.innerHTML = '<em>No blogs found.</em>';
+          return;
+        }
+        let html = '<div class="blog-grid">';
+        blogs.forEach((blog) => {
+          html += `
+            <a href="blog.html?title=${encodeURIComponent(blog.title)}" class="blog-card">
+              <div class="blog-card-title">${blog.title}</div>
+              <div class="blog-card-date">${blog.date}</div>
+              <div class="blog-card-snippet">${getBlogSnippet(blog.content)}</div>
+            </a>
+          `;
+        });
+        html += '</div>';
+        listDiv.innerHTML = html;
+      } catch (err) {
+        document.getElementById('blogsList').innerHTML = 'Error loading blogs.';
+      }
+    }
+    async function handleAdd(e) {
+      e.preventDefault();
+      const form = e.target;
+      const data = {
+        title: form.title.value,
+        content: form.content.value,
+        date: form.date.value
+      };
+      try {
+        const res = await fetch('http://localhost:8080/add', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        const result = await res.json();
+        document.getElementById('message').textContent = result.message || res.statusText;
+        // Close modal
+        const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('addModal'));
+        modal.hide();
+      } catch (err) {
+        document.getElementById('message').textContent = 'Error: ' + err;
+      }
+      form.reset();
+      await loadBlogs();
+      return false;
+    }
+    async function handleRemove(e) {
+      e.preventDefault();
+      const form = e.target;
+      const data = { title: form.title.value };
+      try {
+        const res = await fetch('http://localhost:8080/remove', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        const result = await res.json();
+        document.getElementById('message').textContent = result.message || res.statusText;
+        // Close modal
+        const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('removeModal'));
+        modal.hide();
+      } catch (err) {
+        document.getElementById('message').textContent = 'Error: ' + err;
+      }
+      form.reset();
+      await loadBlogs();
+      return false;
+    }
+    async function handleEdit(e) {
+      e.preventDefault();
+      const form = e.target;
+      const data = {
+        title: form.title.value,
+        content: form.content.value,
+        date: form.date.value
+      };
+      try {
+        const res = await fetch('http://localhost:8080/edit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        const result = await res.json();
+        document.getElementById('message').textContent = result.message || res.statusText;
+        // Close modal
+        const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('editModal'));
+        modal.hide();
+      } catch (err) {
+        document.getElementById('message').textContent = 'Error: ' + err;
+      }
+      form.reset();
+      await loadBlogs();
+      return false;
+    }
+    // Call loadBlogs on page load
+    window.onload = function() {
+      loadBlogs();
+    };
+  </script>
+</body>
+</html>
