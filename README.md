@@ -1,7 +1,5 @@
 # Blogs
 
-# Blogs
-
 A simple blog platform built with Go (backend) and HTML/CSS/JavaScript (frontend).
 
 ## Features
